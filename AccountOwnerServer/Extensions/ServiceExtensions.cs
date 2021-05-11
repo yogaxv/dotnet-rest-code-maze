@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Entities;
 
 namespace AccountOwnerServer.Extensions
 {
@@ -34,5 +37,13 @@ namespace AccountOwnerServer.Extensions
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
         }
+
+        public static void ConfigureMySqlContext(this IServiceCollection services, IConfiguration config)
+        {
+            var connectionString = config["ConnectionStrings:mainConnection"];
+            services.AddDbContext<RepositoryContext>
+                (o => o.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion));
+        }
+
     }
 }
